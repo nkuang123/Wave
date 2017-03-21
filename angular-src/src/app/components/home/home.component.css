@@ -1,3 +1,9 @@
 #myCarousel {
   margin-top: 50px;
 }
+
+#images {
+  width: auto ;
+  max-width: 100% ;
+  height: auto ;
+}
