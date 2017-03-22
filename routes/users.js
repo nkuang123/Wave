@@ -11,7 +11,8 @@ router.post('/register', (req, res, next) => {
 
 	let newUser = new User({
 
-		name: req.body.name,
+		firstname: req.body.firstname,
+		lastname: req.body.lastname,
 		email: req.body.email,
 		username: req.body.username,
 		password: req.body.password
@@ -23,11 +24,11 @@ router.post('/register', (req, res, next) => {
 		if(err) {
 
 			res.json({success: false, msg: 'Failed to register user'});
-		
+
 		} else {
 
 			res.json({success: true, msg: 'User registered'});
-		
+
 		}
 
 	});
@@ -47,7 +48,7 @@ router.post('/authenticate', (req, res, next) => {
 		if(!user) {
 
 			return res.json({success: false, msg: 'User not found'});
-		
+
 		}
 
 		User.comparePassword(password, user.password, (err, isMatch) => {
@@ -62,7 +63,8 @@ router.post('/authenticate', (req, res, next) => {
 					token: 'JWT ' + token,
 					user: {
 						id: user._id,
-						name: user.name,
+						firstname: user.firstname,
+						lastname: user.lastname,
 						username: user.username,
 						email: user.email
 
