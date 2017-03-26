@@ -36,32 +36,46 @@ export class RegisterComponent implements OnInit {
       password: this.password
     }
 
+    var check = true;
+
     // Required Fields
     if (!this.validateService.validateRegister(user)) {
+      console.log('validateRegister');
       this.flashMessage.show('Please fill in all fields',
                               {cssClass: 'alert-danger', timeout:3000});
       return false;
     }
 
     // Validate email
+
     if (!this.validateService.validateEmail(user.email)) {
+
       this.flashMessage.show('Please use a valid email',
                               {cssClass: 'alert-danger', timeout:3000});
+
       return false;
+
     }
 
     // Register User
+
     this.authService.registerUser(user).subscribe(data => {
+
       if (data.success) {
         this.flashMessage.show('You are now registered and can log in',
                               {cssClass: 'alert-success', timeout:3000});
+
         this.router.navigate(['/login']);
+        console.log(user);
+
       } else {
-        this.flashMessage.show('Something went wrong',
+        this.flashMessage.show(data.msg,
                               {cssClass: 'alert-danger', timeout:3000});
         this.router.navigate(['/register']);
       }
     })
+
+
 
 
   }

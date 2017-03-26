@@ -5,7 +5,6 @@ const jwt = require('jsonwebtoken');
 const config = require('../config/database');
 const User = require('../models/user');
 
-
 // Register
 router.post('/register', (req, res, next) => {
 
@@ -19,20 +18,50 @@ router.post('/register', (req, res, next) => {
 
 	});
 
-	User.addUser(newUser, (err, user) => {
+	User.getUserByUsername(newUser.username, (err, user) => {
+		console.log('getUserByUsername');
+		if (err) throw err;
+		if (user) {
 
-		if(err) {
-
-			res.json({success: false, msg: 'Failed to register user'});
+			return res.json({success: false, msg: 'Username Already Exists'});
 
 		} else {
 
-			res.json({success: true, msg: 'User registered'});
+				User.addUser(newUser, (err, user) => {
 
-		}
+					if(err) {
+
+						return res.json({success: false, msg: 'Please enter a valid username'});
+
+					} else {
+
+						return res.json({success: true, msg: 'User registered'});
+
+					}
+
+				})
+
+			}
+
+		});
 
 	});
 
+
+
+
+
+// Validate
+router.post('/validate', (req, res, next) => {
+  const username = req.body.username;
+  User.getUserByUsername(username, (err, userDB) => {
+    if(err) throw err;
+    if(userDB) {
+      return res.json({success: false, msg: 'Username Already Exists'});
+    } else {
+      return res.json({success: true, msg: 'Username is unique'});
+    }
+  });
 });
 
 // Authenticate
@@ -79,11 +108,13 @@ router.post('/authenticate', (req, res, next) => {
 
 });
 
+
 // Profile
 router.get('/profile', passport.authenticate('jwt', {session: false}), (req, res, next) => {
 
 	res.json({user: req.user});
 
 });
+
 
 module.exports = router;

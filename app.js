@@ -7,6 +7,8 @@ const passport = require('passport');
 const mongoose = require('mongoose');
 const config = require('./config/database');
 
+mongoose.Promise = require('bluebird');
+
 // Connect to Database
 mongoose.connect(config.database);
 
